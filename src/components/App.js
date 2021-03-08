@@ -14,19 +14,20 @@ class App extends Component {
     const web3 = window.web3;
     const accounts = await web3.eth.getAccounts();
 
-    // console.log('accounts: ',accounts);
     this.setState({account: accounts[0]});
 
-    const networkId = await web3.eth.net.getId();
-    console.log('NetworkID: ', networkId);
-
     // Load Election Contract
-    const electionData = Election.networks[5777];
-    console.log('Contract data: ', electionData);
+    const electionData = Election.networks[5777];   // Here, 5777 is the networkID of Ganache RPC
 
     if(electionData) {
       const election = new web3.eth.Contract(Election.abi, electionData.address);
       this.setState({election});
+
+      console.log('...FETCHING CANDIDATES COUNT...');
+      
+      const candidatesCount = await election.methods.getCandidatesCount.call();
+      // this.setState({candidatesCount});
+      console.log('candidatesCount: ', candidatesCount);
     } else {
       window.alert('Election contract not deployed!');
     }
@@ -46,10 +47,9 @@ class App extends Component {
   }
 
   // Cast vote (YET TO IMPLEMENT)
-    castVote = (candidateId) => {
-        this.setState({loading: true});
-        
-    }
+    // castVote = (candidateId) => {
+    //   this.setState({loading: true});
+    // }
 
   // stakeTokens = (amount) => {
   //   this.setState({loading: true});
@@ -65,6 +65,7 @@ class App extends Component {
     this.state = {
       account: '0x0',
       election: {},
+      candidatesCount: '0',
       loading: true
     };
   }
@@ -75,6 +76,7 @@ class App extends Component {
       content = <h3 id="loader" className="text-center">Loading...</h3>
     } else {
       content = <Main 
+        candidatesCount = {this.state.candidatesCount}
         castVote = {this.castVote}
       />
     }
