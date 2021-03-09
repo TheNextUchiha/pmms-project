@@ -4,9 +4,15 @@ class Main extends Component {
   render() {
     let status;
     if(this.props.voted) {
-        status = <span className="badge badge-danger">Voted</span>;
+        status = <span className="badge badge-success" style={{fontSize: "14px"}}>Vote Casted</span>;
     } else {
-        status = <span className="badge badge-success">Not Voted</span>;
+        status = <span className="badge badge-danger" style={{fontSize: "14px"}}>Yet to Vote</span>;
+    }
+
+    for(let i=0; i<this.props.candidatesCount; i++) {
+        if(!this.props.candidates[i].votes) {
+            this.props.candidates[i].votes = '0';
+        }
     }
 
     return (
@@ -16,10 +22,47 @@ class Main extends Component {
             <div className="card-header" style={{background: "#D3E0EA"}}>
                 <strong>Voter's Status: </strong> {status}
             </div>    
-            <div className="card-body">    
-                No. of candidates: {this.props.candidatesCount} <br/>
-                
-                THE FORM GOES HERE....
+            <div className="card-body">
+                <table className="table table-sm table-bordered">
+                    <thead className="thead-light text-center">
+                        <tr>
+                            <th>Candidates</th>
+                            <th>Votes</th>
+                        </tr>
+                    </thead>
+                    {this.props.candidates.map((candidate) => {
+                        return (
+                            <tbody>
+                                <td>{candidate.name}</td>
+                                <td className="text-center">{candidate.votes}</td>
+                            </tbody>
+                        );
+                    })}
+                </table>
+                <h5 className="text-center">Vote Here</h5>
+                <form className="d-flex flex-column align-item-center">
+                    <div className="container border">
+                        <div className="row">
+                            <div className="col-2 border"><strong>Sr. No.</strong></div>
+                            <div className="col-5 border"><strong>Candidate Name</strong></div>
+                            <div className="col-3 border"><strong>Party</strong></div>
+                            <div className="col-2 border"><strong>Option</strong></div>
+                        </div>
+                        {this.props.candidates.map((candidate) => {
+                            return (
+                            <div className="row">
+                                <div className="col-2 border">{candidate.id}</div>
+                                <div className="col-5 border">{candidate.name}</div>
+                                <div className="col-3 border">Party</div>
+                                <div className="col-2 border">
+                                    <input type="radio" name="candidate"></input>
+                                </div>
+                            </div>
+                            );
+                        })}
+                    </div><br/>
+                    <button className="btn btn-primary w-25" type="submit">Vote!</button>
+                </form>
             </div>
         </div>
     </div>
