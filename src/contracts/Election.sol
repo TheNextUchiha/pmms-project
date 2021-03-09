@@ -3,7 +3,7 @@ pragma solidity ^0.5.0;
 contract Election {
     // Model a Candidate
     struct Candidate {
-        int id;
+        uint id;
         string name;
         uint voteCount;
     }
@@ -11,13 +11,13 @@ contract Election {
     // Store accounts that have voted
     mapping(address => bool) public voters;
     // Store & Fetch Candidates
-    mapping(int => Candidate) public candidates;
+    mapping(uint => Candidate) public candidates;
     // Store Candidates Count
-    int public candidatesCount=0;
+    uint public candidatesCount;
 
     // voted event
     event votedEvent (
-        int indexed _candidateId
+        uint indexed _candidateId
     );
 
     constructor() public {
@@ -30,15 +30,11 @@ contract Election {
         candidates[candidatesCount] = Candidate(candidatesCount, _name, 0);
     }
 
-    function getCandidatesCount() view public returns(int) {
-        return candidatesCount;
-    }
-
     // function getCandidate(candidateId) public view returns(uint, string, uint) {
     //     return ()
     // }
 
-    function vote(int _candidateId) public {
+    function vote(uint _candidateId) public {
         // require that they haven't voted before
         require(!voters[msg.sender]);
 

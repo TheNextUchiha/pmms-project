@@ -2,15 +2,23 @@ import React, { Component } from 'react';
 
 class Main extends Component {
   render() {
+    let status;
+    if(this.props.voted) {
+        status = <span className="badge badge-danger">Voted</span>;
+    } else {
+        status = <span className="badge badge-success">Not Voted</span>;
+    }
+
     return (
       <div id="content" className="mt-3">
       <h2 className="text-center">Your Vote matters, so do You.</h2>
         <div className="card">
             <div className="card-header" style={{background: "#D3E0EA"}}>
-                <strong>Voter's Status: </strong>
+                <strong>Voter's Status: </strong> {status}
             </div>    
             <div className="card-body">    
                 No. of candidates: {this.props.candidatesCount} <br/>
+                
                 THE FORM GOES HERE....
             </div>
         </div>
