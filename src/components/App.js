@@ -20,6 +20,7 @@ class App extends Component {
         const electionData = Election.networks[5777];   // Here, 5777 is the networkID of Ganache RPC
 
         if(electionData) {
+            // Load Election contract
             const election = new web3.eth.Contract(Election.abi, electionData.address);
             this.setState({election});
       
@@ -28,10 +29,10 @@ class App extends Component {
 
             const voted = await election.methods.voters(this.state.account).call();
             this.setState({voted});
-
+            
             for(let i=1; i<=this.state.candidatesCount; i++) {
                 let cand = await election.methods.candidates(i).call();
-                this.state.candidates.push({id: cand.id.toString(), name: cand.name, votes: cand.votes});
+                this.state.candidates.push({id: cand.id.toString(), name: cand.name, party: cand.party, votes: cand.voteCount});
             }
         } else {
             window.alert('Election contract not deployed!');
@@ -51,10 +52,14 @@ class App extends Component {
         }
     }
 
-    // Cast vote (YET TO IMPLEMENT)
-    // castVote = (candidateId) => {
-    //   this.setState({loading: true});
-    // }
+    // Cast vote
+    castVote = (candidateId) => {
+        this.setState({loading: true});
+
+        this.state.election.methods.vote(candidateId).send({from: this.state.account}).on('transactionHash', (hash) => {
+            this.setState({loading: false});
+        });
+    }
 
     constructor(props) {
         super(props);
@@ -74,10 +79,11 @@ class App extends Component {
             content = <h3 id="loader" className="text-center">Loading...</h3>
         } else {
             content = <Main 
-            candidatesCount = {this.state.candidatesCount}
-            candidates = {this.state.candidates}
-            castVote = {this.castVote}
-        />
+                candidatesCount = {this.state.candidatesCount}
+                voted = {this.state.voted}
+                candidates = {this.state.candidates}
+                castVote = {this.castVote}
+            />
         }
 
         return (
