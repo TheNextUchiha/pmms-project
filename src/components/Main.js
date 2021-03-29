@@ -48,7 +48,11 @@ class Main extends Component {
                                 }
                             }
                             
-                            this.props.castVote(option);
+                            if(!option) {
+                                window.alert('Select a Candidate from the list!');
+                            } else {
+                                this.props.castVote(option);
+                            }
                         }
                     }>
                         <h5 className="text-center">Vote Here</h5>
