@@ -52,6 +52,10 @@ class Main extends Component {
                                 window.alert('Select a Candidate from the list!');
                             } else {
                                 this.props.castVote(option);
+                             
+                                window.setTimeout(() => {
+                                    window.location.reload();
+                                }, 5000);
                             }
                         }
                     }>
